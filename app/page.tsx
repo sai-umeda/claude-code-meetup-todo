@@ -46,8 +46,12 @@ export default function Home() {
     await refresh();
   }
 
-  async function toggle(id: string) {
-    await fetch(`/api/todos/${id}`, { method: "PATCH" });
+  async function toggle(id: string, completed: boolean) {
+    await fetch(`/api/todos/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ completed }),
+    });
     await refresh();
   }
 
@@ -101,7 +105,7 @@ export default function Home() {
             <input
               type="checkbox"
               checked={t.completed}
-              onChange={() => toggle(t.id)}
+              onChange={() => toggle(t.id, !t.completed)}
             />
             <span className="title">{t.title}</span>
             {!t.completed && isOverdue(t.dueDate, today) && (
